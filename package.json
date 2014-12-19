@@ -1,0 +1,33 @@
+{
+  "name": "wonderest",
+  "version": "0.0.0",
+  "description": "REST client with fluent interface",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "mocha --recursive --check-leaks --harmony test"
+  },
+  "keywords": [
+    "REST",
+    "client",
+    "fluent"
+  ],
+  "author": "salper <stefen.alper@nbeards.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "body-parser": "^1.10.0",
+    "chai": "^1.10.0",
+    "expres": "0.0.5",
+    "express": "^4.10.6",
+    "mocha": "^2.0.1",
+    "proxyquire": "^1.3.0",
+    "sinon": "^1.12.2",
+    "sinon-chai": "^2.6.0"
+  },
+  "dependencies": {
+    "harmony-reflect": "^1.1.1",
+    "methods": "^1.1.0",
+    "promise": "^6.0.1",
+    "ramda": "^0.8.0",
+    "superagent": "^0.21.0"
+  }
+}

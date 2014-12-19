@@ -9,7 +9,7 @@ Wonderest
 [deps]: https://david-dm.org/salper/wonderest.svg?theme=shields.io
 [devdeps]: https://david-dm.org/salper/wonderest/dev-status.svg?theme=shields.io
 
-A REST client with fluent interface
+A REST client with fluent interface.
 
 # Requirements
 Node must be run with the harmony flag:
@@ -58,8 +58,8 @@ var client = wrest({
 ```javascript
 resource.path; // => chained resource path
 resource.options; // constructed options
-resource.get(headers, data); // execute a PUT request
-resource.post(headers, data); // execute a POST request
+resource.get(headers, data); // executes a GET request
+resource.post(headers, data); // executes a POST request
 // etc.
 ```
 

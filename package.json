@@ -1,6 +1,6 @@
 {
   "name": "wonderest",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "REST client with fluent interface",
   "main": "src/index.js",
   "scripts": {

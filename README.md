@@ -29,13 +29,13 @@ wrest({ url: 'http://example.org/api' }).get()
   console.log(res.text;
 });
 
-wrest({ url: 'http://example.org/api' })users.get()
+wrest({ url: 'http://example.org/api' }).users.get()
 // => GET http://example.org/api/users
 .then(function(res) {
   console.log(res.text;
 });
 
-wrest({ url: 'http://example.org/api' })users(1).get()
+wrest({ url: 'http://example.org/api' }).users(1).get()
 // => GET http://example.org/api/users/1
 .then(function(res) {
   console.log(res.text;

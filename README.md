@@ -9,7 +9,7 @@ Wonderest
 [deps]: https://david-dm.org/salper/wonderest.svg?theme=shields.io
 [devdeps]: https://david-dm.org/salper/wonderest/dev-status.svg?theme=shields.io
 
-Wonderest is wrapper around [superagent](https://github.com/visionmedia/superagent), allowing to configure endpoints bit by bit using a chainable API.
+Wonderest is a wrapper around [superagent](https://github.com/visionmedia/superagent), allowing to configure endpoints bit by bit using a chainable API.
 
 # Requirements
 Wonderest is written in ES6, compiled in ES5 using [traceur](https://github.com/google/traceur-compiler), and requires traceur-runtime to be loaded.

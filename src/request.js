@@ -1,42 +1,104 @@
-
+/* jshint loopfunc: true */
 'use strict';
 
-var R = require('ramda');
-var Promise = require('promise');
-var request = require('superagent');
-var explode = require('./util').explode;
+import R from 'ramda';
+import request from 'superagent';
+import methods from 'methods';
+import Promise from 'bluebird';
 
 /**
- * Create and execute request.
- *
- * @param {Object} options
- * @param {String} options.url
- * @param {String} options.method
- * @param {Object=} options.headers
- * @param {Object=} options.data
- * @return {Promise}
+ * Module interface.
  */
 
-module.exports = function doRequest(options) {
-  var req = createRequest(options);
-  return Promise.denodeify(req.end.bind(req))();
+export default Request;
+
+/**
+ * Request constructor.
+ *
+ * @param {Resource} resource
+ */
+
+function Request(resource) {
+	this._resource = resource;
+}
+
+Request.prototype = {
+
+	/**
+	 * Execute request hooks.
+	 *
+	 * @return {Promise}
+	 * @private
+	 */
+
+	_exectRequestHook() {
+		return this._resource.notify('request', this._resource);
+	},
+
+	/**
+	 * Execute response hooks.
+	 *
+	 * @param {Response} res
+	 * @param {Function} retry
+	 * @return {Promise}
+	 * @private
+	 */
+
+	_execResponseHook(res, retry) {
+		return this._resource.notify('response', this._resource, res, retry);
+	},
+
+	/**
+	 * Send a request using provided data and resource data.
+	 *
+	 * @param {String} method - HTTP verb
+	 * @param {Object=} data
+	 * @param {Object=} headers
+	 * @return {Promise}
+	 * @private
+	 */
+
+	_send(method, data, headers) {
+		let request = this._createRequest(
+			'delete' === method ? 'del' : method,
+			R.mixin(this._resource.data(), data || {}),
+			R.mixin(this._resource.headers(), headers || {})
+		);
+
+		return Promise.promisify(request.end.bind(request))();
+	},
+
+	/**
+	 * Create and return superagent request.
+	 *
+	 * @param {String} method - HTTP verb
+	 * @param {Object=} data
+	 * @param {Object=} headers
+	 * @return {SuperAgent}
+	 * @private
+	 */
+
+	_createRequest(method, data, headers) {
+		return request[method](this._resource.path).set(headers)[
+			['post', 'put', 'patch'].indexOf(method) >= 0 ? 'send' : 'query'
+		](data);
+	}
 };
 
 /**
- * Create and configure request.
+ * Iterate on HTTP verbs and create helper methods.
  *
- * @param {Object} options
- * @return {Request}
+ * @param {Object=} data
+ * @param {Object=} headers
+ * @param {Promise}
  */
 
-function createRequest(options) {
-  var req = request[
-    'delete' === options.method ? 'del' : options.method
-  ](options.url).set(options.headers || {});
+for (let method of methods)
+	Request.prototype[method] = function (data, headers) {
+		let retry = () => this._send(method, data, headers);
 
-  if ('p' === R.head(options.method))
-    return req.send(options.data || {});
-
-  var setQuery = R.curryN(3, R.func)('query');
-  return R.reduce(setQuery, req, explode(options.data));
-}
+		return this._exectRequestHook()
+			.then(() => retry())
+			.then(res => this._execResponseHook(res, retry))
+			.spread((resource, res) => res);
+	};

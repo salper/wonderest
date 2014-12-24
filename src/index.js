@@ -1,26 +1,12 @@
-/* global Proxy: true */
 'use strict';
 
-require('harmony-reflect');
-var handler = require('./handler');
-var resource = require('./resource');
+import Resource from './resource';
 
 /**
- * Module interface.
- */
-
-module.exports = factory;
-
-/**
- * Client factory.
+ * Client resource factory.
  *
- * @param {Object} options
- * @param {String} options.url - api endpoint
- * @param {Object} options.headers - default headers
- * @param {Object} options.data - default data (request query or body)
- * @return {Proxy}
+ * @param {String} url
+ * @return {Resource}
  */
 
-function factory(options) {
-  return new Proxy(resource('', options || {}), handler);
-}
+export default url => new Resource(url);

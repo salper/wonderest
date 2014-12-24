@@ -1,35 +1,7 @@
 'use strict';
 
-var explode = require('../../src/util').explode;
+import {capitalize} from '../../src/util';
 
-describe('util', function () {
-  describe('explode', function () {
-    var object;
-
-    describe('given undefined value', function () {
-      it('should part as empty', function () {
-        expect(explode(object)).to.eql([]);
-      });
-    });
-
-    describe('given empty value', function () {
-      beforeEach(function () {
-        object = {};
-      });
-
-      it('should part as empty', function () {
-        expect(explode(object)).to.eql([]);
-      });
-    });
-
-    describe('given filled value', function () {
-      beforeEach(function () {
-        object = { a: 'b', c: 'd'};
-      });
-
-      it('should part as empty', function () {
-        expect(explode(object)).to.eql([{ a: 'b' }, { c: 'd' }]);
-      });
-    });
-  });
-});
+describe('Capitalize', () =>
+	it('should capitalize string', () =>
+		expect(capitalize('toKeN')).to.equal('Token')));

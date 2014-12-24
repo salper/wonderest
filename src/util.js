@@ -1,17 +1,11 @@
 'use strict';
 
-var R = require('ramda');
-
 /**
- * Explode provided object.
+ * Capitalize given string.
  *
- * Return each key/value pair as an object in an array.
- *
- * @param {Object} src
- * return {[Object]}
+ * @param {String} str
+ * @return {String}
  */
 
-exports.explode = R.pipe(
-  R.toPairs,
-  R.map(R.apply(R.createMapEntry))
-);
+export var capitalize = (str) =>
+	str.substr(0, 1).toUpperCase() + str.substr(1).toLowerCase();

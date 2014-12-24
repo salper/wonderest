@@ -1,13 +1,15 @@
 'use strict';
 
-var express = require('express');
-var request = require('../../src/request');
-var bodyParser = require('body-parser');
+import sinon from 'sinon';
+import express from 'express';
+import Request from '../../src/request';
+import Promise from 'bluebird';
+import bodyParser from 'body-parser';
 
-describe('request', function () {
-  var app, server, address, options;
+describe('A request', () => {
+  var app, server, address, request, resource;
 
-  beforeEach(function (done) {
+  beforeEach(done => {
     app = express();
     app.use(bodyParser.json());
     server = app.listen(0, function () {
@@ -24,78 +26,84 @@ describe('request', function () {
     server.close(done);
   });
 
-  beforeEach(function () {
-    options = {
-      url: address,
-      headers: {
-        'x-foo': 'bar'
-      },
-      data: {
+  beforeEach(() => resource = {
+		path: address,
+		headers() {
+      return { 'x-foo': 'bar' };
+    },
+  	data() {
+      return {
         foo: 'bar',
         bar: 'baz'
-      }
-    };
+      };
+  	},
+    notify: sinon.spy(function (name, ...args) {
+      return Promise.resolve(args);
+    })
   });
 
-  describe('given GET method', function () {
-    beforeEach(function () {
-      app.route('/').get(function (req, res) {
+  beforeEach(() => request = new Request(resource));
+
+  describe('given GET method', () => {
+    beforeEach(() => {
+      app.route('/').get((req, res) => {
         expect(req.get('x-foo')).to.equal('bar');
-        expect(req).to.have.property('query').that.eql({ foo: 'bar', bar: 'baz' });
+        expect(req).to.have.property('query').that.eql({
+        	foo: 'bar',
+        	bar: 'baz'
+        });
         res.status(200).send('OK');
       });
     });
 
-    beforeEach(function () {
-      options.method = 'get';
-    });
-
-    it('should GET hostname/?foo=bar&bar=baz', function () {
-      request(options)
+    it('should GET hostname/?foo=bar&bar=baz', () => {
+      return request.get()
       .then(function (response) {
         expect(response.text).to.equal('OK');
+        expect(resource.notify).to.have.been.calledTwice;
+        expect(resource.notify).to.have.been.calledWith('request', resource);
       });
     });
   });
 
-  ['post', 'put', 'patch'].forEach(function (verb) {
-    describe('given ' + verb.toUpperCase() + ' method', function () {
-      beforeEach(function () {
-        app.route('/')[verb](function (req, res) {
+  for (let verb of ['post', 'put', 'patch']) {
+    describe('given ' + verb.toUpperCase() + ' method', () => {
+      beforeEach(() => {
+        app.route('/')[verb]((req, res) => {
           expect(req.get('x-foo')).to.equal('bar');
           expect(req).to.have.property('body').that.eql({ foo: 'bar', bar: 'baz' });
           res.status(201).send('OK');
         });
       });
 
-      beforeEach(function () {
-        options.method = verb;
-      });
-
-      it('should ' + verb.toUpperCase() + ' /some-path', function () {
-        return request(options)
+      it('should ' + verb.toUpperCase() + ' /some-path', () => {
+        return request[verb]()
         .then(function (response) {
+          expect(response.status).to.equal(201);
           expect(response.text).to.equal('OK');
+          expect(resource.notify).to.have.been.calledTwice;
+          expect(resource.notify).to.have.been.calledWith('request', resource);
         });
       });
     });
-  });
+  }
 
-  describe('given DELETE method', function () {
-    beforeEach(function () {
-      app.route('/').delete(function (req, res) {
+  describe('given DELETE method', () => {
+    beforeEach(() => {
+      app.route('/').delete((req, res) => {
         expect(req.get('x-foo')).to.equal('bar');
         expect(req).to.have.property('query').that.eql({ foo: 'bar', bar: 'baz' });
         res.status(204).send();
       });
     });
 
-    beforeEach(function () {
-      options.method = 'delete';
-    });
-
-    it('should DELETE /some-path?', function () {
-      return request(options);
+    it('should DELETE hostname/?foo=bar&bar=baz', () => {
+      return request.delete()
+      .then(function (response) {
+        expect(response.status).to.equal(204);
+        expect(resource.notify).to.have.been.calledTwice;
+        expect(resource.notify).to.have.been.calledWith('request', resource);
+      });
     });
   });
 });

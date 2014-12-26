@@ -1,6 +1,6 @@
 {
   "name": "wonderest",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "REST client with chained configurable interface",
   "main": "dist/index.js",
   "scripts": {

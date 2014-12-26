@@ -27,16 +27,16 @@ describe('A request', () => {
   });
 
   beforeEach(() => resource = {
-		path: address,
-		headers() {
+    path: address,
+    headers() {
       return { 'x-foo': 'bar' };
     },
-  	data() {
+    data() {
       return {
         foo: 'bar',
         bar: 'baz'
       };
-  	},
+    },
     notify: sinon.spy(function (name, ...args) {
       return Promise.resolve(args);
     })
@@ -49,8 +49,8 @@ describe('A request', () => {
       app.route('/').get((req, res) => {
         expect(req.get('x-foo')).to.equal('bar');
         expect(req).to.have.property('query').that.eql({
-        	foo: 'bar',
-        	bar: 'baz'
+          foo: 'bar',
+          bar: 'baz'
         });
         res.status(200).send('OK');
       });

@@ -1,8 +1,8 @@
 {
   "name": "wonderest",
   "version": "0.0.1",
-  "description": "REST client with fluent interface",
-  "main": "src/index.js",
+  "description": "REST client with chained configurable interface",
+  "main": "dist/index.js",
   "scripts": {
     "build": "traceur --dir src dist/ --modules=commonjs",
     "test": "mocha --recursive --check-leaks -r test/bootstrap.js --compilers js:mocha-traceur test"
@@ -13,6 +13,10 @@
     "request"
   ],
   "author": "salper <stefen.alper@nbeards.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/salper/wonderest"
+    },
   "license": "MIT",
   "devDependencies": {
     "body-parser": "^1.10.0",
@@ -29,5 +33,8 @@
     "methods": "^1.1.0",
     "ramda": "^0.8.0",
     "superagent": "^0.21.0"
-  }
+  },
+  "engines": {
+    "node": ">= 0.10"
+  }  
 }

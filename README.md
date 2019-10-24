@@ -9,6 +9,8 @@
 [deps]: https://david-dm.org/salper/wonderest.svg?theme=shields.io
 [devdeps]: https://david-dm.org/salper/wonderest/dev-status.svg?theme=shields.io
 
+**This project is no longer supported, please consider using [Axios](https://github.com/axios/axios) instead.**
+
 Wonderest is a wrapper around [superagent](https://github.com/visionmedia/superagent), allowing to configure endpoints bit by bit using a chainable API.
 
 # Requirements

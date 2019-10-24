@@ -1,4 +1,4 @@
-Wonderest
+:no_entry: [DEPRECATED] Wonderest
 =========
 
 [![Build Status][status]](https://travis-ci.org/salper/wonderest)
